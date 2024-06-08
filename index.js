@@ -30,6 +30,7 @@ app.use('/api/materials', require('./Routes/material'));
 app.use('/api/students', require('./Routes/student'));
 app.use('/api/attendance', require('./Routes/attendance'));
 app.use('/api/note', require('./Routes/note'));
+app.use('/api/activity', require('./Routes/activity'));
 
 app.get('/', (req, res) => res.send('<h1>Hello</h1>'));
 
