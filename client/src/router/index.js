@@ -12,7 +12,6 @@ import Usermanagement from '../features/admin/components/pages/pending-registrat
 import AddUser from '../features/admin/components/pages/adduser';
 import Attendence from '../features/admin/components/pages/Attendence';
 import ViewAttendence from '../features/admin/components/pages/viewattendence';
-import Calender from '../features/admin/components/pages/CalenderShedule';
 import Courses from '../features/admin/components/pages/courses';
 import Activity from '../features/admin/components/pages/activity';
 import AllNotes from '../features/admin/components/pages/allNotes';
