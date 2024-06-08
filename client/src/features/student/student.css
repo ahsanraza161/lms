@@ -1,0 +1,155 @@
+.userprofile {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  /* background-image: url(../../public/assets/bg-studentpanel.jpg); */
+  width: 100%;
+  height: 100% !important;
+}
+
+.userprofilein {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 20px;
+}
+.noteslist{
+  /* background-color: #464646; */
+  background: linear-gradient(to right bottom, #430089, #2f0027);
+  padding: 15px 0px;
+  border-radius: 15px;
+  
+}
+.noteUL p{
+  color: #fff;
+  margin: 0px !important;
+}
+.noteUL{
+  padding: 0 !important;
+}
+.NoteStudents{
+  color: black;
+  text-align: center;
+  margin: 10px auto;
+  width: 60vw;
+}
+.NoteStudents h2{
+  font-size: 40px;
+  text-transform: uppercase !important;
+  
+}
+.NoteStudents h3{
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase !important;
+}
+.NoteStudents li{
+  text-decoration: none;
+  list-style: none;
+  margin: 20px 0px;
+}
+
+.userprofile .userprofilein .left {
+  width: 20%;
+  /* background-color: aqua; */
+  border: 1px solid rgb(207, 207, 207);
+  border-radius: 5px;
+  min-height: 50vh;
+}
+
+.userprofile .userprofilein .right {
+  width: 80%;
+  /* background-color: aqua; */
+  border: 1px solid rgb(207, 207, 207);
+  border-radius: 5px;
+  min-height: 50vh;
+}
+
+@media (max-width: 1000px) {
+  .userprofile .userprofilein .left {
+    width: 30%;
+    /* background-color: aqua; */
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    min-height: 50vh;
+  }
+
+  .userprofilein {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10vh;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .userprofile .userprofilein .left {
+    width: 30%;
+    /* background-color: aqua; */
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    min-height: 50vh;
+  }
+  .userprofile .userprofilein .right {
+    width: 68%;
+    /* background-color: aqua; */
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    min-height: 50vh;
+  }
+
+  .userprofilein {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10vh;
+    gap: 10px;
+  }
+}
+
+/* @media (max-width: 800px) {
+    .userprofile .userprofilein .left {
+        width: 20%;
+        border: 1px solid rgb(207, 207, 207);
+        border-radius: 5px;
+        min-height: 50vh;
+    }
+    .userprofile .userprofilein .right {
+        width: 78%;
+        border: 1px solid rgb(207, 207, 207);
+        border-radius: 5px;
+        min-height: 50vh;
+    }
+} */
+
+@media (max-width: 500px) {
+  .userprofilein {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10vh;
+    gap: 20px;
+  }
+
+  .userprofile .userprofilein .left {
+    width: 97%;
+    /* background-color: aqua; */
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    /* min-height: 50vh; */
+    align-self: center;
+    min-height: 0;
+  }
+
+  .userprofile .userprofilein .right {
+    width: 97%;
+    /* background-color: aqua; */
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    /* min-height: 50vh; */
+    align-self: center;
+    min-height: 0;
+  }
+}

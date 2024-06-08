@@ -1,0 +1,9 @@
+.overflow{
+  overflow: hidden;
+}
+.width{
+  width: 40% !important;
+  margin: 0px auto;
+  overflow: scroll !important;
+  height: 30vh !important;
+}
