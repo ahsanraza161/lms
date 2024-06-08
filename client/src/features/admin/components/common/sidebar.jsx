@@ -61,11 +61,11 @@ const Sidebar = ({ children }) => {
       name: 'Attendence',
       icon: <BsCalendar2Check />
     },
-    // {
-    //   path: 'viewattendence',
-    //   name: 'View Attendence',
-    //   icon: <BsCalendar2Week />,
-    // },
+    {
+      path: 'viewattendence',
+      name: 'View Attendence',
+      icon: <BsCalendar2Week />,
+    },
     {
       path: 'allNotes',
       name: 'Notes',

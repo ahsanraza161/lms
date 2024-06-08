@@ -28,16 +28,21 @@ const AttendanceForm = () => {
 
   useEffect(() => {
     if (courses.length > 0) {
-      setData((prevData) => ({
-        ...prevData,
-        course: courses[0].name,
-        courseId: courses[0]._id,
-        students: courses[0].students,
-        attendance: courses[0].students.reduce((acc, student) => {
-          acc[student._id] = { present: false, absent: false };
-          return acc;
-        }, {}),
-      }));
+      const firstCourse = courses[0];
+      console.log('First Course:', firstCourse);
+
+      if (firstCourse && firstCourse._id && firstCourse.students) {
+        setData((prevData) => ({
+          ...prevData,
+          course: firstCourse.name,
+          courseId: firstCourse._id,
+          students: firstCourse.students,
+          attendance: firstCourse.students.reduce((acc, student) => {
+            acc[student._id] = { present: false, absent: false };
+            return acc;
+          }, {}),
+        }));
+      }
     }
   }, [courses]);
 
@@ -67,7 +72,7 @@ const AttendanceForm = () => {
     setAllFieldsSelected(allSelected);
   }, [data]);
 
-  const successMsg = 'Attendance marked successfully' 
+  const successMsg = 'Attendance marked successfully'; 
   const handleSubmit = (event) => {
     event.preventDefault();
     const attendanceList = Object.entries(data.attendance).map(([studentId, status]) => ({
@@ -85,16 +90,18 @@ const AttendanceForm = () => {
     const { name, value } = e.target;
     if (name === 'course') {
       const selectedCourse = courses.find((course) => course.name === value);
-      setData({
-        ...data,
-        course: value,
-        courseId: selectedCourse._id,
-        students: selectedCourse.students,
-        attendance: selectedCourse.students.reduce((acc, student) => {
-          acc[student._id] = { present: false, absent: false };
-          return acc;
-        }, {}),
-      });
+      if (selectedCourse && selectedCourse._id && selectedCourse.students) {
+        setData({
+          ...data,
+          course: value,
+          courseId: selectedCourse._id,
+          students: selectedCourse.students,
+          attendance: selectedCourse.students.reduce((acc, student) => {
+            acc[student._id] = { present: false, absent: false };
+            return acc;
+          }, {}),
+        });
+      }
     } else if (name === 'date') {
       setData({ ...data, date: value });
     }
@@ -125,13 +132,15 @@ const AttendanceForm = () => {
           <FormSelect id="course" onChange={onChangeHandler} name="course" value={data.course}>
             {courses.length > 0 &&
               courses.map((course) => (
-                <option
-                  value={course?.name}
-                  key={course?._id}
-                  courseId={course?._id}
-                >
-                  {course?.name}
-                </option>
+                course._id ? (
+                  <option
+                    value={course?.name}
+                    key={course?._id}
+                    courseId={course?._id}
+                  >
+                    {course?.name}
+                  </option>
+                ) : null
               ))}
           </FormSelect>
         </FormGroup>
