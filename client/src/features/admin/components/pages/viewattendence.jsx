@@ -22,29 +22,36 @@ const ViewAttendance = () => {
   function combineAttendancesByCourseAndStudent(attendances) {
     const combined = {};
 
-    attendances.forEach((attendance) => {
-      const courseId = attendance.course._id;
-      const studentId = attendance.student._id;
+    // if (attendances.length > 0){
+    //   attendances.forEach((attendance) => {
+    //     const courseId = attendance.course._id;
+    //     const studentId = attendance.student._id;
+  
+    //     const key = `${courseId}_${studentId}`;
+  
+    //     if (!combined[key]) {
+    //       combined[key] = {
+    //         course: attendance.course,
+    //         student: attendance.student,
+    //         totalClasses: 0,
+    //         attendances: [],
+    //       };
+    //     }
+  
+    //     combined[key].totalClasses += 1;
+    //     combined[key].attendances.push({
+    //       date: attendance.date,
+    //       status: attendance.status,
+    //     });
+    //   });
+  
+    //   return Object.values(combined);
+    // }
+    // else{
+    //   return Object.values(combined);
+    // }
 
-      const key = `${courseId}_${studentId}`;
-
-      if (!combined[key]) {
-        combined[key] = {
-          course: attendance.course,
-          student: attendance.student,
-          totalClasses: 0,
-          attendances: [],
-        };
-      }
-
-      combined[key].totalClasses += 1;
-      combined[key].attendances.push({
-        date: attendance.date,
-        status: attendance.status,
-      });
-    });
-
-    return Object.values(combined);
+    
   }
 
   // Usage
