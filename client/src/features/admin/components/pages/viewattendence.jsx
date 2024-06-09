@@ -1,14 +1,27 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Modal } from 'react-bootstrap';
 import CircularProgress from '@mui/material/CircularProgress';
 import AdminContext from '../../../../context/admin/admincontext';
 
 const ViewAttendance = () => {
   const { getAttendanceData, attendances } = useContext(AdminContext);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [currentAttendanceDetails, setCurrentAttendanceDetails] = useState([]);
 
   useEffect(() => {
-    getAttendanceData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        await getAttendanceData();
+      } catch (error) {
+        console.error('Error fetching attendance data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [getAttendanceData]);
 
   function roundToSignificantDigits(num, digits) {
     if (num === 0) return 0;
@@ -19,43 +32,65 @@ const ViewAttendance = () => {
     return shifted / magnitude;
   }
 
-  function combineAttendancesByCourseAndStudent(attendances) {
-    const combined = {};
-
-    // if (attendances.length > 0){
-    //   attendances.forEach((attendance) => {
-    //     const courseId = attendance.course._id;
-    //     const studentId = attendance.student._id;
-  
-    //     const key = `${courseId}_${studentId}`;
-  
-    //     if (!combined[key]) {
-    //       combined[key] = {
-    //         course: attendance.course,
-    //         student: attendance.student,
-    //         totalClasses: 0,
-    //         attendances: [],
-    //       };
-    //     }
-  
-    //     combined[key].totalClasses += 1;
-    //     combined[key].attendances.push({
-    //       date: attendance.date,
-    //       status: attendance.status,
-    //     });
-    //   });
-  
-    //   return Object.values(combined);
-    // }
-    // else{
-    //   return Object.values(combined);
-    // }
-
-    
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    };
+    return date.toLocaleDateString('en-US', options);
   }
 
-  // Usage
+  function combineAttendancesByCourseAndStudent(attendances = []) {
+    const combined = {};
+
+    attendances.forEach((attendance) => {
+      if (!attendance.course || !attendance.student) return;
+
+      const courseId = attendance.course._id;
+      const studentId = attendance.student._id;
+      const key = `${courseId}_${studentId}`;
+
+      if (!combined[key]) {
+        combined[key] = {
+          course: attendance.course,
+          student: attendance.student,
+          totalClasses: attendance.course.total_days, // Use total days from course
+          totalPresent: 0,
+          presentDates: [],
+        };
+      }
+
+      if (attendance.status === 'present') {
+        combined[key].totalPresent += 1;
+        combined[key].presentDates.push(attendance.date);
+      }
+    });
+
+    return Object.values(combined);
+  }
+
   const combinedAttendances = combineAttendancesByCourseAndStudent(attendances);
+
+  const handleShowDetails = (attendanceItem) => {
+    setCurrentAttendanceDetails(attendanceItem.presentDates);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setCurrentAttendanceDetails([]);
+  };
+
+  if (loading) {
+    return (
+      <div className="container mt-5 d-flex justify-content-center">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
@@ -72,23 +107,54 @@ const ViewAttendance = () => {
         </thead>
         <tbody>
           {combinedAttendances.map((attendanceItem) => (
-            <tr key={attendanceItem._id}>
-              <td>{attendanceItem?.student.name}</td>
-              <td>{attendanceItem?.course.name}</td>
-              <td>{attendanceItem?.course.total_days}</td>
-              <td>{attendanceItem?.totalClasses}</td>
+            <tr key={`${attendanceItem.student._id}_${attendanceItem.course._id}`}>
+              <td>{attendanceItem.student.name}</td>
+              <td>{attendanceItem.course.name}</td>
+              <td>{attendanceItem.totalClasses}</td>
+              <td>{attendanceItem.totalPresent}</td>
               <td>
-                {roundToSignificantDigits(attendanceItem?.totalClasses /
-                  attendanceItem?.course.total_days,2)}
+                {roundToSignificantDigits(
+                  (attendanceItem.totalPresent / attendanceItem.totalClasses) * 100,
+                  2
+                )}
                 %
               </td>
               <td>
-                <Button variant="info">Edit</Button>
+                <Button variant="info" onClick={() => handleShowDetails(attendanceItem)}>
+                  Details
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Attendance Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Date and Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentAttendanceDetails.map((date, index) => (
+                <tr key={index}>
+                  <td>{formatDate(date)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

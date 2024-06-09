@@ -9,8 +9,8 @@ const Course = ({
   start_date,
   total_days,
   id,
-  students,
-  classes_days,
+  students = [],
+  classes_days = '',
 }) => {
   const {
     deleteCourse,
@@ -20,7 +20,7 @@ const Course = ({
     deleteStudentCourse,
     addMaterial,
     fetchMaterials,
-    materials,
+    materials = [],
   } = useContext(AdminContext);
 
   const [showUserDataModal, setShowUserDataModal] = useState(false);
@@ -110,13 +110,14 @@ const Course = ({
     fetchMaterials(id); // Pass the id to fetchMaterials
     setShowMaterialsModal(true);
   };
+
   return (
     <>
       <tr>
         <td>{name}</td>
         <td>{teacher}</td>
         <td>{formattedDate}</td>
-        <td>{classes_days ? classes_days : ''}</td>
+        <td>{classes_days}</td>
         <td>{total_days}</td>
         <td className="actionBtnStudent">
           <Button variant="primary" onClick={handleShowUserDataModal}>
@@ -157,10 +158,10 @@ const Course = ({
                 <th>Action</th>
               </tr>
             </thead>
-            { students.length > 0
-              ? students.map((student) => (
-                  <tbody key={student._id}>
-                    <tr>
+            <tbody>
+              {studentList.length > 0
+                ? studentList.map((student) => (
+                    <tr key={student._id}>
                       <td>{student?.name}</td>
                       <td>{student?.fatherName}</td>
                       <td>{student.email}</td>
@@ -179,9 +180,9 @@ const Course = ({
                         )}
                       </td>
                     </tr>
-                  </tbody>
-                ))
-              : ''}
+                  ))
+                : ''}
+            </tbody>
           </Table>
         </Modal.Body>
         <Modal.Footer>
@@ -208,10 +209,10 @@ const Course = ({
                 <th>Action</th>
               </tr>
             </thead>
-            {studensThatCanBeAddToCourse.length > 0
-              ? studensThatCanBeAddToCourse.map((student) => (
-                  <tbody key={student._id}>
-                    <tr>
+            <tbody>
+              {studensThatCanBeAddToCourse.length > 0
+                ? studensThatCanBeAddToCourse.map((student) => (
+                    <tr key={student._id}>
                       <td>{student.name}</td>
                       <td>{student.fatherName}</td>
                       <td>{student.email}</td>
@@ -226,9 +227,9 @@ const Course = ({
                         </Button>
                       </td>
                     </tr>
-                  </tbody>
-                ))
-              : ''}
+                  ))
+                : ''}
+            </tbody>
           </Table>
         </Modal.Body>
         <Modal.Footer>
