@@ -27,6 +27,7 @@
 body {
   background-image: url('../public/assets/bgforlms.jpg');
   background-repeat: no-repeat;
+  background-size: cover;
 }
 .home {
   background-color: #fff;
@@ -81,7 +82,6 @@ body {
 }
 .navmain {
   display: flex !important;
-  margin-left: 61% !important;
   gap: 30px !important;
 }
 .navbar-nav a {
@@ -249,14 +249,12 @@ body {
 @media only screen and (max-width: 1024px) {
   .navmain {
     display: flex !important;
-    margin-left: 30% !important;
     gap: 20px !important;
   }
 }
 @media only screen and (max-width: 1200px) {
   .navmain {
     display: flex !important;
-    margin-left: 63% !important;
     gap: 30px !important;
   }
 }
