@@ -7,7 +7,6 @@ const Student = require('../models/Student');
 const Course = require('../models/Course');
 const Attendance = require('../models/Attendance');
 
-
 // @route GET api/attendance
 // @description View an attendance
 // @access Private (requires authentication) Only admin can View attendance
@@ -34,7 +33,7 @@ router.get('/', async (req, res) => {
 router.get('/getstudentattendance', auth, async (req, res) => {
   try {
     const id = req.user.id;
-    const attendance = await Attendance.find({id})
+    const attendance = await Attendance.find({ student: id }).populate('course');
 
     return res.status(200).json(attendance);
   } catch (err) {

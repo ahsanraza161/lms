@@ -23,6 +23,7 @@ const Authstate = ({ children }) => {
     message: null,
     studentcourses: [],
     teacher_course: {},
+    student_attendances: [],
   };
   const RefreshHandler = async () => {
     dispatch({
@@ -96,11 +97,7 @@ const Authstate = ({ children }) => {
           'Content-Type': 'application/json',
         },
       };
-      const res = axios.put(
-        'http://localhost:8080/api/auth',
-        data,
-        config
-      );
+      const res = axios.put('http://localhost:8080/api/auth', data, config);
       console.log(res.data);
       dispatch({
         type: 'updateuser',
@@ -124,7 +121,6 @@ const Authstate = ({ children }) => {
         type: 'getcoursesofstudents',
         payload: res.data,
       });
-      console.log(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -143,13 +139,10 @@ const Authstate = ({ children }) => {
 
   const ResetPassword = async (password, confirmPassword, token) => {
     try {
-      const res = await axios.put(
-        `http://localhost:8080/api/users/${token}`,
-        {
-          password,
-          confirmPassword,
-        }
-      );
+      const res = await axios.put(`http://localhost:8080/api/users/${token}`, {
+        password,
+        confirmPassword,
+      });
       console.log(res.data);
     } catch (err) {
       console.error(err);
@@ -179,10 +172,26 @@ const Authstate = ({ children }) => {
         'http://localhost:8080/api/students/getteacherdata'
       );
       dispatch({
-        type:'setteacherdata',
-        payload:res.data
-      })
+        type: 'setteacherdata',
+        payload: res.data,
+      });
       console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const GetAttendanceData = async () => {
+    setAuthToken(localStorage.token);
+    try {
+      const res = await axios.get(
+        'http://localhost:8080/api/attendance/getstudentattendance'
+      );
+      console.log(res.data);
+      dispatch({
+        type: 'setstudentattendance',
+        payload: res.data,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -202,6 +211,7 @@ const Authstate = ({ children }) => {
         message: state.message,
         studentcourses: state.studentcourses,
         teacher_course: state.teacher_course,
+        student_attendances:state.student_attendances,
         LoginHandler,
         RefreshPage,
         RegisterHandler,
@@ -213,7 +223,8 @@ const Authstate = ({ children }) => {
         ForgetPassword,
         ResetPassword,
         RefreshHandler,
-        GetTeacherData
+        GetTeacherData,
+        GetAttendanceData
       }}
     >
       {children}

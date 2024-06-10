@@ -5,19 +5,53 @@ import AdminContext from '../../../context/admin/admincontext'; // Import AdminC
 import { Toaster } from 'react-hot-toast';
 
 function YourCourses() {
-  const { GetCoursesOfStudent, studentcourses } = useContext(AuthContext);
+  const {
+    GetCoursesOfStudent,
+    studentcourses,
+    GetAttendanceData,
+    student_attendances,
+  } = useContext(AuthContext);
   const { fetchMaterials, materials } = useContext(AdminContext); // Access fetchMaterials and materials from AdminContext
-  const [selectedCourseMaterials, setSelectedCourseMaterials] = useState([]);
   const [showMaterialModal, setShowMaterialModal] = useState(false);
 
   useEffect(() => {
     GetCoursesOfStudent();
+    GetAttendanceData();
   }, []);
 
   const handleShowMaterials = (courseId) => {
     fetchMaterials(courseId); // Fetch materials for the selected course
     setShowMaterialModal(true);
   };
+
+  function combineAttendancesByCourse(attendances = []) {
+    const combined = {};
+
+    attendances.forEach((attendance) => {
+      if (!attendance.course) return;
+
+      const courseId = attendance.course._id;
+
+      if (!combined[courseId]) {
+        combined[courseId] = {
+          course: attendance.course,
+          totalClasses: attendance.course.total_days || 0, // Use total days from course, default to 0 if not provided
+          totalPresent: 0,
+          presentDates: [],
+        };
+      }
+
+      if (attendance.status === 'present') {
+        combined[courseId].totalPresent += 1;
+        combined[courseId].presentDates.push(attendance.date);
+      }
+    });
+
+    return Object.values(combined);
+  }
+
+  const combinedAttendances = combineAttendancesByCourse(student_attendances);
+  console.log(combinedAttendances);
 
   return (
     <div className="container mt-3">
@@ -96,12 +130,28 @@ function YourCourses() {
           </Table>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowMaterialModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowMaterialModal(false)}
+          >
             Close
           </Button>
         </Modal.Footer>
       </Modal>
       <Toaster />
+      <div className="attendaces">
+        {
+          combinedAttendances.length > 0 ? 
+          combinedAttendances.map((item) => {
+            return <>
+              {item.course.name}
+              {item.course.teacher}
+              {item.totalClasses}
+              {item.totalPresent}
+            </>
+          })
+          : ''
+        }</div>
     </div>
   );
 }
