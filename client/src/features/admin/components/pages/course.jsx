@@ -74,52 +74,27 @@ const Course = ({
   async function handleMaterialSubmit() {
     if (!allFieldsFilled(materialTitle, materialDate, materialAttachment)) {
       alert('Please fill in all required fields');
-      // console.log('materialTitle:', materialTitle);
-      // console.log('materialDate:', materialDate);
-      // console.log('materialAttachment:', materialAttachment);
-      // console.log('tutorialLink:', tutorialLink);
-
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('title', materialTitle);
     formData.append('date', materialDate);
-
-    try {
-      const downloadURL = await uploadMaterial(materialAttachment);
-      if (downloadURL) {
-        formData.append('downloadURL', downloadURL);
-        console.log('Download URL:', downloadURL);
-      } else {
-        console.error('Error uploading file. Material upload cancelled.');
-        toast.error('Error uploading material');
-        return; // Handle upload error gracefully
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      toast.error('Error uploading material');
-      return; // Handle upload error gracefully
-    }
-
+    const downloadURL = await uploadMaterial(materialAttachment);
+    formData.append('downloadURL', downloadURL); 
+    console.log(downloadURL)
     formData.append('tutorialLink', tutorialLink || '');
-
-    // Log formData content
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
+  
     try {
       await addMaterial(id, formData);
       clearMaterialForm();
       setShowAddMaterialModal(false);
-      console.log(formData)
-      // toast.success('Material uploaded successfully.');
+      toast.success('Material uploaded successfully.');
     } catch (error) {
       console.error('Error uploading material:', error);
-      toast.error('Error uploading material'); // Display user-friendly error message
     }
   }
+  
 
   function allFieldsFilled(...fields) {
     return fields.every((field) => field);
