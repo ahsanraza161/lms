@@ -24,7 +24,7 @@ const Adminstate = ({ children }) => {
     // Accept id as a parameter
     try {
       setAuthToken(localStorage.token);
-      console.log('context is working');
+      console.log('Data before sending:', data);
       const response = await axios.post(
         `http://localhost:8080/api/materials/${id}/upload`, // Use id in the URL
         data,

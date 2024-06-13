@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Button, Modal, Table, Form } from 'react-bootstrap';
 import AdminContext from '../../../../context/admin/admincontext';
 import toast, { Toaster } from 'react-hot-toast';
+import { uploadMaterial } from '../../../../firebase';
 
 const Course = ({
   name,
@@ -70,27 +71,55 @@ const Course = ({
     getApprovedStudents();
   }, []);
 
-  const handleMaterialSubmit = async () => {
+  async function handleMaterialSubmit() {
     if (!allFieldsFilled(materialTitle, materialDate, materialAttachment)) {
       alert('Please fill in all required fields');
+      // console.log('materialTitle:', materialTitle);
+      // console.log('materialDate:', materialDate);
+      // console.log('materialAttachment:', materialAttachment);
+      // console.log('tutorialLink:', tutorialLink);
+
       return;
     }
 
-    try {
-      const formData = new FormData();
-      formData.append('title', materialTitle);
-      formData.append('date', materialDate);
-      formData.append('attachment', materialAttachment);
-      formData.append('tutorialLink', tutorialLink || '');
+    const formData = new FormData();
+    formData.append('title', materialTitle);
+    formData.append('date', materialDate);
 
+    try {
+      const downloadURL = await uploadMaterial(materialAttachment);
+      if (downloadURL) {
+        formData.append('downloadURL', downloadURL);
+        console.log('Download URL:', downloadURL);
+      } else {
+        console.error('Error uploading file. Material upload cancelled.');
+        toast.error('Error uploading material');
+        return; // Handle upload error gracefully
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast.error('Error uploading material');
+      return; // Handle upload error gracefully
+    }
+
+    formData.append('tutorialLink', tutorialLink || '');
+
+    // Log formData content
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    try {
       await addMaterial(id, formData);
       clearMaterialForm();
       setShowAddMaterialModal(false);
-      toast.success('Material uploaded successfully.');
+      console.log(formData)
+      // toast.success('Material uploaded successfully.');
     } catch (error) {
       console.error('Error uploading material:', error);
+      toast.error('Error uploading material'); // Display user-friendly error message
     }
-  };
+  }
 
   function allFieldsFilled(...fields) {
     return fields.every((field) => field);
@@ -238,6 +267,7 @@ const Course = ({
           </Button>
         </Modal.Footer>
       </Modal>
+
       <Modal
         show={showAddMaterialModal}
         className="modal-lg"
@@ -292,6 +322,7 @@ const Course = ({
           </Button>
         </Modal.Footer>
       </Modal>
+
       <Modal
         show={showMaterialsModal}
         className="modal-lg"
@@ -317,9 +348,9 @@ const Course = ({
                       <td>{material.title}</td>
                       <td>{material.date}</td>
                       <td>
-                        {material.attachment ? (
+                        {material.downloadURL ? (
                           <a
-                            href={material.attachment}
+                            href={material.downloadURL}
                             target="_blank"
                             rel="noopener noreferrer"
                           >

@@ -9,8 +9,9 @@ const MaterialSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  attachment: {
-    type: String, // Assuming you'll store the path or URL to the uploaded file
+  downloadURL: {
+    type: String,
+    required: true,
   },
   tutorialLink: {
     type: String,
