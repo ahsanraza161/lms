@@ -21,7 +21,7 @@ const ViewAttendance = () => {
     };
 
     fetchData();
-  }, [getAttendanceData]);
+  }, []);
 
   function roundToSignificantDigits(num, digits) {
     if (num === 0) return 0;
@@ -73,6 +73,7 @@ const ViewAttendance = () => {
   }
 
   const combinedAttendances = combineAttendancesByCourseAndStudent(attendances);
+  console.log(combinedAttendances);
 
   const handleShowDetails = (attendanceItem) => {
     setCurrentAttendanceDetails(attendanceItem.presentDates);
@@ -107,20 +108,26 @@ const ViewAttendance = () => {
         </thead>
         <tbody>
           {combinedAttendances.map((attendanceItem) => (
-            <tr key={`${attendanceItem.student._id}_${attendanceItem.course._id}`}>
+            <tr
+              key={`${attendanceItem.student._id}_${attendanceItem.course._id}`}
+            >
               <td>{attendanceItem.student.name}</td>
               <td>{attendanceItem.course.name}</td>
               <td>{attendanceItem.totalClasses}</td>
               <td>{attendanceItem.totalPresent}</td>
               <td>
                 {roundToSignificantDigits(
-                  (attendanceItem.totalPresent / attendanceItem.totalClasses) * 100,
+                  (attendanceItem.totalPresent / attendanceItem.totalClasses) *
+                    100,
                   2
                 )}
                 %
               </td>
               <td>
-                <Button variant="info" onClick={() => handleShowDetails(attendanceItem)}>
+                <Button
+                  variant="info"
+                  onClick={() => handleShowDetails(attendanceItem)}
+                >
                   Details
                 </Button>
               </td>

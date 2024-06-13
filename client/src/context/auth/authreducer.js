@@ -62,16 +62,14 @@ const Authreducer = (state, action) => {
       let isStudentAuthenticated = false;
       let isTeacherAuthenticated = false;
       if (token2 && role == 'admin') {
-        console.log("This condition run");
-        isAdminAuthenticated = true
-      }
-      else if (token2 && role == 'Student') {
-        console.log("This condition run");
-        isStudentAuthenticated = true
-      }
-      else if (token2 && role == 'Faculty') {
-        console.log('This condition run')
-        isTeacherAuthenticated = true
+        console.log('This condition run');
+        isAdminAuthenticated = true;
+      } else if (token2 && role == 'Student') {
+        console.log('This condition run');
+        isStudentAuthenticated = true;
+      } else if (token2 && role == 'Faculty') {
+        console.log('This condition run');
+        isTeacherAuthenticated = true;
       }
       return {
         ...state,
@@ -97,9 +95,14 @@ const Authreducer = (state, action) => {
     case 'setteacherdata':
       return {
         ...state,
-        data:action.payload.user,
-        teacher_course:action.payload.course
-      }
+        data: action.payload.user,
+        teacher_course: action.payload.course,
+      };
+    case 'setstudentattendance':
+      return {
+        ...state,
+        student_attendances: action.payload,
+      };
     default:
       return { state };
   }
